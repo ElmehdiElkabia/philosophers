@@ -6,7 +6,7 @@
 /*   By: eelkabia <eelkabia@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 09:37:02 by eelkabia          #+#    #+#             */
-/*   Updated: 2025/05/09 12:28:40 by eelkabia         ###   ########.fr       */
+/*   Updated: 2025/05/09 12:30:10 by eelkabia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,17 +105,35 @@ void	init_data(int argc, char **argv, t_data *data)
 	init_forks_and_philosophers(data);
 }
 
+void	start_simulation(t_data *data)
+{
+	int	i;
+	pthread_t	monitor_thread;
 
+	i = 0;
+	while (i < data->number_of_philosophers)
+	{
+		pthread_create(&data->philo[i].thread, NULL, philo_routine, &data->philo[i]);
+		i++;
+	}
+	pthread_create(&monitor_thread, NULL, monitor, data);
+	i = 0;
+	while (i < data->number_of_philosophers)
+	{
+		pthread_join(&data->philo[i].thread, NULL);
+		i++;
+	}
+	pthread_join(&monitor_thread, NULL);
+}
 
 int	main(int argc, char **argv)
 {
 	t_data	data;
-	//int		i;
 
 	if (validate_args(argc, argv))
 		return (1);
 	init_data(argc, argv, &data);
-	//start_simulation(&data);
+	start_simulation(&data);
 	free(data.forks);
 	free(data.philo);
 }
