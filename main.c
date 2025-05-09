@@ -6,7 +6,7 @@
 /*   By: eelkabia <eelkabia@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 09:37:02 by eelkabia          #+#    #+#             */
-/*   Updated: 2025/05/09 11:31:10 by eelkabia         ###   ########.fr       */
+/*   Updated: 2025/05/09 12:28:40 by eelkabia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,13 @@ void	init_forks_and_philosophers(t_data *data)
 	}
 }
 
+long	long get_time(void)
+{
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	return ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000));
+}
+
 void	init_data(int argc, char **argv, t_data *data)
 {
 	data->number_of_philosophers = atoi(argv[1]);
@@ -87,7 +94,7 @@ void	init_data(int argc, char **argv, t_data *data)
 	else
 		data->meals_required = -1;
 	data->someone_died = 0;
-	data->start_time = 0;
+	data->start_time = get_time();
 	pthread_mutex_init(&data->print_mutex, NULL);
 	pthread_mutex_init(&data->death_check_mutex, NULL);
 	data->forks = malloc(sizeof(pthread_mutex_t)
@@ -98,35 +105,39 @@ void	init_data(int argc, char **argv, t_data *data)
 	init_forks_and_philosophers(data);
 }
 
+
+
 int	main(int argc, char **argv)
 {
 	t_data	data;
-	int		i;
+	//int		i;
 
 	if (validate_args(argc, argv))
 		return (1);
 	init_data(argc, argv, &data);
-	i = 0;
-	printf("number_of_philosophers ==> %d\n", data.number_of_philosophers);
-	while (i < data.number_of_philosophers)
-	{
-		printf("id => %d  == time_to_die ==> %d\n", data.philo[i].id,
-			data.time_to_die);
-		printf("id => %d  == time_to_sleep ==> %d\n", data.philo[i].id,
-			data.time_to_sleep);
-		printf("id => %d  == time_to_eat ==> %d\n", data.philo[i].id,
-			data.time_to_eat);
-		printf("id => %d  == meals_required ==> %d\n", data.philo[i].id,
-			data.meals_required);
-		printf("id => %d  == left_fork ==> %d\n", data.philo[i].id,
-			data.philo[i].left_fork);
-		printf("id => %d  == right_fork ==> %d\n", data.philo[i].id,
-			data.philo[i].right_fork);
-		printf("id => %d  == last_meal_time ==> %lld\n", data.philo[i].id,
-			data.philo[i].last_meal_time);
-		printf("\n");
-		i++;
-	}
+	//start_simulation(&data);
 	free(data.forks);
 	free(data.philo);
 }
+
+//i = 0;
+//printf("number_of_philosophers ==> %d\n", data.number_of_philosophers);
+//while (i < data.number_of_philosophers)
+//{
+//	printf("id => %d  == time_to_die ==> %d\n", data.philo[i].id,
+//		data.time_to_die);
+//	printf("id => %d  == time_to_sleep ==> %d\n", data.philo[i].id,
+//		data.time_to_sleep);
+//	printf("id => %d  == time_to_eat ==> %d\n", data.philo[i].id,
+//		data.time_to_eat);
+//	printf("id => %d  == meals_required ==> %d\n", data.philo[i].id,
+//		data.meals_required);
+//	printf("id => %d  == left_fork ==> %d\n", data.philo[i].id,
+//		data.philo[i].left_fork);
+//	printf("id => %d  == right_fork ==> %d\n", data.philo[i].id,
+//		data.philo[i].right_fork);
+//	printf("id => %d  == last_meal_time ==> %lld\n", data.philo[i].id,
+//		data.philo[i].last_meal_time);
+//	printf("\n");
+//	i++;
+//}

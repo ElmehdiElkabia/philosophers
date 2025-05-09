@@ -6,7 +6,7 @@
 /*   By: eelkabia <eelkabia@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 09:37:00 by eelkabia          #+#    #+#             */
-/*   Updated: 2025/05/09 11:29:26 by eelkabia         ###   ########.fr       */
+/*   Updated: 2025/05/09 12:22:06 by eelkabia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef	struct s_philo
 	int	left_fork; //	Index of left fork in data->forks
 	int	right_fork; //	Index of right fork in data->forks
 	long	long	last_meal_time; //	Timestamp of the last time this philosopher started eating.
+	pthread_t	thread; //	pthread_t used to run this philosopher's routine.
 	pthread_mutex_t	meal_mutex; //	Protects access to last_meal_time. Needed by monitor.
 	t_data	*data; //	Pointer to shared t_data. Gives access to settings and mutexes.
 }	t_philo;
