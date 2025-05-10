@@ -6,15 +6,15 @@
 /*   By: eelkabia <eelkabia@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 09:37:02 by eelkabia          #+#    #+#             */
-/*   Updated: 2025/05/09 12:30:10 by eelkabia         ###   ########.fr       */
+/*   Updated: 2025/05/10 11:35:12 by eelkabia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	check_number(char *str)
+int check_number(char *str)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	if (str[0] == '\0')
@@ -28,16 +28,16 @@ int	check_number(char *str)
 	return (0);
 }
 
-int	validate_args(int argc, char **argv)
+int validate_args(int argc, char **argv)
 {
-	int	i;
+	int i;
 
 	if (argc != 5 && argc != 6)
 	{
 		printf("Usage: \
 				%s number_of_philosophers time_to_die time_to_eat \
-				 time_to_sleep[must_eat]\n ", \
-				argv[0]);
+				 time_to_sleep[must_eat]\n ",
+			   argv[0]);
 		return (1);
 	}
 	i = 1;
@@ -48,8 +48,8 @@ int	validate_args(int argc, char **argv)
 			printf("Error: Argument %d must be a positive number\n", i);
 			printf("Usage: \
 					%s number_of_philosophers time_to_die time_to_eat \
-					time_to_sleep[must_eat]\n ", \
-					argv[0]);
+					time_to_sleep[must_eat]\n ",
+				   argv[0]);
 			return (1);
 		}
 		i++;
@@ -57,9 +57,9 @@ int	validate_args(int argc, char **argv)
 	return (0);
 }
 
-void	init_forks_and_philosophers(t_data *data)
+void init_forks_and_philosophers(t_data *data)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (i < data->number_of_philosophers)
@@ -76,14 +76,14 @@ void	init_forks_and_philosophers(t_data *data)
 	}
 }
 
-long	long get_time(void)
+long long get_time(void)
 {
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
 	return ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000));
 }
 
-void	init_data(int argc, char **argv, t_data *data)
+void init_data(int argc, char **argv, t_data *data)
 {
 	data->number_of_philosophers = atoi(argv[1]);
 	data->time_to_die = atoi(argv[2]);
@@ -97,18 +97,74 @@ void	init_data(int argc, char **argv, t_data *data)
 	data->start_time = get_time();
 	pthread_mutex_init(&data->print_mutex, NULL);
 	pthread_mutex_init(&data->death_check_mutex, NULL);
-	data->forks = malloc(sizeof(pthread_mutex_t)
-			* data->number_of_philosophers);
+	data->forks = malloc(sizeof(pthread_mutex_t) * data->number_of_philosophers);
 	data->philo = malloc(sizeof(t_philo) * data->number_of_philosophers);
 	if (!data->forks || !data->philo)
 		perror("");
 	init_forks_and_philosophers(data);
 }
 
-void	start_simulation(t_data *data)
+void *philo_routine(void *argv)
 {
-	int	i;
-	pthread_t	monitor_thread;
+	t_philo *philo;
+
+	philo = (t_philo *)argv;
+	if (philo->id % 2 == 0)
+		usleep(1000);
+	while (!philo->data->someone_died)
+	{
+		pthread_mutex_lock(&philo->data->forks[philo->left_fork]);
+		printf("%d has taken a fork\n", philo->id);
+		pthread_mutex_lock(&philo->data->forks[philo->right_fork]);
+		printf("%d has taken a fork\n", philo->id);
+		pthread_mutex_lock(&philo->meal_mutex);
+		philo->last_meal_time = get_time();
+		philo->meals_eaten++;
+		pthread_mutex_unlock(&philo->meal_mutex);
+		printf("%d is eating\n", philo->id);
+		usleep(philo->data->time_to_eat * 1000);
+		pthread_mutex_unlock(&philo->data->forks[philo->left_fork]);
+		pthread_mutex_unlock(&philo->data->forks[philo->right_fork]);
+		printf("%d is sleeping\n", philo->id);
+		usleep(philo->data->time_to_sleep * 1000);
+		printf("%d is thinking\n", philo->id);
+		if (philo->data->meals_required > 0 && philo->meals_eaten >= philo->data->meals_required)
+			break;
+	}
+	return (NULL);
+}
+
+void *monitor(void *argv)
+{
+	t_data *data;
+	int i;
+
+	data = (t_data *)argv;
+	while (!data->someone_died)
+	{
+		i = 0;
+		while (i < data->number_of_philosophers)
+		{
+			pthread_mutex_lock(&data->philo[i].meal_mutex);
+			if (get_time() - data->philo[i].last_meal_time > data->time_to_die)
+			{
+				printf("%d is died\n", data->philo[i].id);
+				data->someone_died = 1;
+				pthread_mutex_unlock(&data->philo[i].meal_mutex);
+				return (NULL);
+			}
+			pthread_mutex_unlock(&data->philo[i].meal_mutex);
+			usleep(500);
+			i++;
+		}
+	}
+	return (NULL);
+}
+
+void start_simulation(t_data *data)
+{
+	int i;
+	pthread_t monitor_thread;
 
 	i = 0;
 	while (i < data->number_of_philosophers)
@@ -120,15 +176,15 @@ void	start_simulation(t_data *data)
 	i = 0;
 	while (i < data->number_of_philosophers)
 	{
-		pthread_join(&data->philo[i].thread, NULL);
+		pthread_join(data->philo[i].thread, NULL);
 		i++;
 	}
-	pthread_join(&monitor_thread, NULL);
+	pthread_join(monitor_thread, NULL);
 }
 
-int	main(int argc, char **argv)
+int main(int argc, char **argv)
 {
-	t_data	data;
+	t_data data;
 
 	if (validate_args(argc, argv))
 		return (1);
@@ -138,9 +194,9 @@ int	main(int argc, char **argv)
 	free(data.philo);
 }
 
-//i = 0;
-//printf("number_of_philosophers ==> %d\n", data.number_of_philosophers);
-//while (i < data.number_of_philosophers)
+// i = 0;
+// printf("number_of_philosophers ==> %d\n", data.number_of_philosophers);
+// while (i < data.number_of_philosophers)
 //{
 //	printf("id => %d  == time_to_die ==> %d\n", data.philo[i].id,
 //		data.time_to_die);
@@ -158,4 +214,4 @@ int	main(int argc, char **argv)
 //		data.philo[i].last_meal_time);
 //	printf("\n");
 //	i++;
-//}
+// }
