@@ -6,7 +6,7 @@
 /*   By: eelkabia <eelkabia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 12:43:08 by eelkabia          #+#    #+#             */
-/*   Updated: 2025/05/19 14:37:33 by eelkabia         ###   ########.fr       */
+/*   Updated: 2025/05/26 14:02:29 by eelkabia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,25 +75,24 @@ void	*monitor_routine(void *argv)
 	int		i;
 
 	data = (t_data *)argv;
-	while (1)
+	i = 0;
+	while (i < data->number_of_philosophers)
 	{
-		i = 0;
-		while (i < data->number_of_philosophers)
+		pthread_mutex_lock(&data->philo[i].meal_mutex);
+		if (data->meals_required > 0
+			&& (data->philo->meals_eaten >= data->meals_required))
+			return (NULL);
+		if (get_time() - data->philo[i].last_meal_time > data->time_to_die)
 		{
-			pthread_mutex_lock(&data->philo[i].meal_mutex);
-			if (get_time() - data->philo[i].last_meal_time > data->time_to_die)
-			{
-				print_message(&data->philo[i], "died");
-				pthread_mutex_lock(&data->death_check_mutex);
-				data->someone_died = 1;
-				pthread_mutex_unlock(&data->death_check_mutex);
-				pthread_mutex_unlock(&data->philo[i].meal_mutex);
-				return (NULL);
-			}
+			print_message(&data->philo[i], "died");
+			pthread_mutex_lock(&data->death_check_mutex);
+			data->someone_died = 1;
+			pthread_mutex_unlock(&data->death_check_mutex);
 			pthread_mutex_unlock(&data->philo[i].meal_mutex);
-			i++;
+			return (NULL);
 		}
-		usleep(500);
+		pthread_mutex_unlock(&data->philo[i].meal_mutex);
+		i++;
 	}
 	return (NULL);
 }
