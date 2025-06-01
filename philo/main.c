@@ -6,7 +6,7 @@
 /*   By: eelkabia <eelkabia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 09:37:02 by eelkabia          #+#    #+#             */
-/*   Updated: 2025/06/01 18:30:12 by eelkabia         ###   ########.fr       */
+/*   Updated: 2025/06/01 19:02:51 by eelkabia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ int	validate_time(int argc, char **argv)
 	i = 1;
 	while (i < argc)
 	{
+		if (ft_atol(argv[i]) == 0)
+			return (1);
 		if (ft_atol(argv[i]) == -2147483648)
 		{
 			printf("Error: Argument %d is out of valid int range\n", i);
