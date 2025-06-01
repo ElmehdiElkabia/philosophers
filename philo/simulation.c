@@ -62,12 +62,13 @@ void	*philosopher_routine(void *argv)
 	int		died;
 
 	philo = (t_philo *)argv;
+	if (handel_one_philo(philo))
+			return (NULL);
 	if (philo->id % 2 == 0)
-		usleep(500);
+		usleep(1000);
 	while (1)
 	{
-		if (!handel_one_philo(philo))
-			eating(philo);
+		eating(philo);
 		set_dead(philo, &died);
 		if (died)
 			break ;
