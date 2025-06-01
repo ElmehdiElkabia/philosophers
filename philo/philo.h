@@ -6,7 +6,7 @@
 /*   By: eelkabia <eelkabia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 09:37:00 by eelkabia          #+#    #+#             */
-/*   Updated: 2025/05/19 10:55:39 by eelkabia         ###   ########.fr       */
+/*   Updated: 2025/05/31 13:13:21 by eelkabia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ void				init_forks_and_philosophers(t_data *data);
 void				start_simulation(t_data *data);
 void				*philosopher_routine(void *arg);
 void				*monitor_routine(void *arg);
-
+void				someone_died(t_data *data, int i);
 long long			get_time(void);
 void				print_message(t_philo *philo, char *message);
-
+long    ft_atoi(char *s);
 #endif
