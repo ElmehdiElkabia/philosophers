@@ -6,7 +6,7 @@
 /*   By: eelkabia <eelkabia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 09:37:02 by eelkabia          #+#    #+#             */
-/*   Updated: 2025/05/19 10:52:50 by eelkabia         ###   ########.fr       */
+/*   Updated: 2025/06/01 18:30:12 by eelkabia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,39 @@ int	check_number(char *str)
 	return (0);
 }
 
+int	validate_time(int argc, char **argv)
+{
+	int	i;
+
+	i = 1;
+	while (i < argc)
+	{
+		if (ft_atol(argv[i]) == -2147483648)
+		{
+			printf("Error: Argument %d is out of valid int range\n", i);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+void	print_msg(char *str)
+{
+	printf("Usage: %s number_of_philosophers ", str);
+	printf("time_to_die ");
+	printf("time_to_eat ");
+	printf("time_to_sleep ");
+	printf("[number_of_times_each_philosopher_must_eat]");
+}
+
 int	validate_args(int argc, char **argv)
 {
 	int	i;
 
 	if (argc != 5 && argc != 6)
 	{
-		printf("Usage: \
-				%s number_of_philosophers time_to_die time_to_eat \
-				time_to_sleep[must_eat]\n ", argv[0]);
+		print_msg(argv[0]);
 		return (1);
 	}
 	i = 1;
@@ -45,13 +69,13 @@ int	validate_args(int argc, char **argv)
 		if (check_number(argv[i]) == 1)
 		{
 			printf("Error: Argument %d must be a positive number\n", i);
-			printf("Usage: \
-					%s number_of_philosophers time_to_die time_to_eat \
-					time_to_sleep[must_eat]\n ", argv[0]);
+			print_msg(argv[0]);
 			return (1);
 		}
 		i++;
 	}
+	if (validate_time(argc, argv))
+		return (1);
 	return (0);
 }
 

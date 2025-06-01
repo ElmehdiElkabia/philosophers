@@ -6,7 +6,7 @@
 /*   By: eelkabia <eelkabia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 12:41:41 by eelkabia          #+#    #+#             */
-/*   Updated: 2025/05/31 11:06:39 by eelkabia         ###   ########.fr       */
+/*   Updated: 2025/06/01 17:27:35 by eelkabia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 void	init_data(int argc, char **argv, t_data *data)
 {
-	data->number_of_philosophers = ft_atoi(argv[1]);
-	data->time_to_die = ft_atoi(argv[2]);
-	data->time_to_eat = ft_atoi(argv[3]);
-	data->time_to_sleep = ft_atoi(argv[4]);
+	data->number_of_philosophers = ft_atol(argv[1]);
+	data->time_to_die = ft_atol(argv[2]);
+	data->time_to_eat = ft_atol(argv[3]);
+	data->time_to_sleep = ft_atol(argv[4]);
 	if (argc == 6)
-		data->meals_required = ft_atoi(argv[5]);
+		data->meals_required = ft_atol(argv[5]);
 	else
 		data->meals_required = -1;
 	data->someone_died = 0;
@@ -30,7 +30,10 @@ void	init_data(int argc, char **argv, t_data *data)
 			* data->number_of_philosophers);
 	data->philo = malloc(sizeof(t_philo) * data->number_of_philosophers);
 	if (!data->forks || !data->philo)
-		perror("");
+	{
+		printf("Error allocating memory for forks or philosophers");
+		return ;
+	}
 	init_forks_and_philosophers(data);
 }
 

@@ -6,7 +6,7 @@
 /*   By: eelkabia <eelkabia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 09:37:00 by eelkabia          #+#    #+#             */
-/*   Updated: 2025/05/31 13:13:21 by eelkabia         ###   ########.fr       */
+/*   Updated: 2025/06/01 17:27:53 by eelkabia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,6 @@ void				*monitor_routine(void *arg);
 void				someone_died(t_data *data, int i);
 long long			get_time(void);
 void				print_message(t_philo *philo, char *message);
-long    ft_atoi(char *s);
+long long			ft_atol(const char *str);
+void				set_dead(t_philo *philo, int *died);
 #endif

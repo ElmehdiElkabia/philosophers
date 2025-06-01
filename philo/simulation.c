@@ -6,7 +6,7 @@
 /*   By: eelkabia <eelkabia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 12:43:08 by eelkabia          #+#    #+#             */
-/*   Updated: 2025/05/31 13:14:24 by eelkabia         ###   ########.fr       */
+/*   Updated: 2025/06/01 17:17:52 by eelkabia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,7 @@ void	*philosopher_routine(void *argv)
 	{
 		if (!handel_one_philo(philo))
 			eating(philo);
-		pthread_mutex_lock(&philo->data->death_check_mutex);
-		died = philo->data->someone_died;
-		pthread_mutex_unlock(&philo->data->death_check_mutex);
+		set_dead(philo, &died);
 		if (died)
 			break ;
 		print_message(philo, "is sleeping");
