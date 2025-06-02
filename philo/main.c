@@ -17,8 +17,10 @@ int	check_number(char *str)
 	int	i;
 
 	i = 0;
-	if (str[0] == '\0')
+	if (!str || str[0] == '\0')
 		return (1);
+	if (str[0] == '+')
+		i++;
 	while (str[i])
 	{
 		if (str[i] < '0' || str[i] > '9')
@@ -35,8 +37,11 @@ int	validate_time(int argc, char **argv)
 	i = 1;
 	while (i < argc)
 	{
-		if (ft_atol(argv[i]) == 0)
+		if (ft_atol(argv[i]) <= 0)
+		{
+			printf("Error: Argument %d must be a positive number\n", i);
 			return (1);
+		}
 		if (ft_atol(argv[i]) == -2147483648)
 		{
 			printf("Error: Argument %d is out of valid int range\n", i);
