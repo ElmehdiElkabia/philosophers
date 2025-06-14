@@ -12,9 +12,9 @@
 
 #include "philo.h"
 
-int	handel_one_philo(t_philo *philo)
+int handel_one_philo(t_philo *philo)
 {
-	int	first;
+	int first;
 
 	first = philo->left_fork;
 	if (philo->data->number_of_philosophers == 1)
@@ -28,101 +28,70 @@ int	handel_one_philo(t_philo *philo)
 	return (0);
 }
 
-void	eating(t_philo *philo)
+void *philosopher_routine(void *argv)
 {
-	int	first;
-	int	second;
-	int	temp;
-
-	first = philo->left_fork;
-	second = philo->right_fork;
-	if (first > second)
-	{
-		temp = first;
-		first = second;
-		second = temp;
-	}
-	pthread_mutex_lock(&philo->data->forks[first]);
-	print_message(philo, "has taken a fork");
-	pthread_mutex_lock(&philo->data->forks[second]);
-	print_message(philo, "has taken a fork");
-	pthread_mutex_lock(&philo->meal_mutex);
-	philo->last_meal_time = get_time();
-	philo->meals_eaten++;
-	print_message(philo, "is eating");
-	pthread_mutex_unlock(&philo->meal_mutex);
-	usleep(philo->data->time_to_eat * 1000);
-	pthread_mutex_unlock(&philo->data->forks[first]);
-	pthread_mutex_unlock(&philo->data->forks[second]);
-}
-
-void	*philosopher_routine(void *argv)
-{
-	t_philo	*philo;
-	int		died;
+	t_philo *philo;
 
 	philo = (t_philo *)argv;
 	if (handel_one_philo(philo))
-			return (NULL);
+		return (NULL);
 	if (philo->id % 2 == 0)
 		usleep(1000);
 	while (1)
 	{
-		eating(philo);
-		set_dead(philo, &died);
-		if (died)
-			break ;
-		print_message(philo, "is sleeping");
-		usleep(philo->data->time_to_sleep * 1000);
-		if (died)
-			break ;
-		print_message(philo, "is thinking");
-		usleep(500);
-		if (philo->data->meals_required > 0
-			&& philo->meals_eaten >= philo->data->meals_required)
-			break ;
+		if (set_dead(philo))
+			break;
+		philosopher_eat(philo);
+		if (set_dead(philo))
+			break;
+		philosopher_sleep(philo);
+		if (set_dead(philo))
+			break;
+		philosopher_think(philo);
+		if (philo->data->meals_required > 0 && philo->meals_eaten >= philo->data->meals_required)
+			break;
 	}
 	return (NULL);
 }
 
-void	*monitor_routine(void *argv)
+void *monitor_routine(void *argv)
 {
-	t_data	*data;
-	int		i;
+	t_data *data;
+	int i;
+	int full_count;
 
 	data = (t_data *)argv;
 	while (!data->someone_died)
 	{
 		i = 0;
+		full_count = 0;
 		while (i < data->number_of_philosophers)
 		{
 			pthread_mutex_lock(&data->philo[i].meal_mutex);
-			if (data->meals_required > 0
-				&& (data->philo[i].meals_eaten >= data->meals_required))
-				return (NULL);
+			if (data->meals_required > 0 && (data->philo[i].meals_eaten >= data->meals_required))
+				full_count++;
 			if (get_time() - data->philo[i].last_meal_time > data->time_to_die)
-			{
-				someone_died(data, i);
-				return (NULL);
-			}
+				return (someone_died(data, i), NULL);
 			pthread_mutex_unlock(&data->philo[i].meal_mutex);
 			i++;
 		}
+		if (data->meals_required > 0 && full_count == data->number_of_philosophers)
+			return (NULL);
 		usleep(500);
 	}
 	return (NULL);
 }
 
-void	start_simulation(t_data *data)
+void start_simulation(t_data *data)
 {
-	int			i;
-	pthread_t	monitor_thread;
+	int i;
+	pthread_t monitor_thread;
 
 	i = 0;
 	while (i < data->number_of_philosophers)
 	{
 		pthread_create(&data->philo[i].thread, NULL, philosopher_routine,
-			&data->philo[i]);
+					   &data->philo[i]);
 		i++;
 	}
 	pthread_create(&monitor_thread, NULL, monitor_routine, data);

@@ -31,24 +31,25 @@ void	someone_died(t_data *data, int i)
 
 void	print_message(t_philo *philo, char *message)
 {
-	int			died;
 	long long	time;
 
-	pthread_mutex_lock(&philo->data->death_check_mutex);
-	died = philo->data->someone_died;
-	pthread_mutex_unlock(&philo->data->death_check_mutex);
+	if (set_dead(philo))
+		return;
 	pthread_mutex_lock(&philo->data->print_mutex);
 	time = get_time() - philo->data->start_time;
-	if (!died)
+	if (!set_dead(philo))
 		printf("%lld %d %s\n", time, philo->id, message);
 	pthread_mutex_unlock(&philo->data->print_mutex);
 }
 
-void	set_dead(t_philo *philo, int *died)
+int	set_dead(t_philo *philo)
 {
+	int	died;
+
 	pthread_mutex_lock(&philo->data->death_check_mutex);
-	*died = philo->data->someone_died;
+	died = philo->data->someone_died;
 	pthread_mutex_unlock(&philo->data->death_check_mutex);
+	return (died);
 }
 
 long long	ft_atol(const char *str)

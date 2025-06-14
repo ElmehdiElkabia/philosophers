@@ -56,5 +56,9 @@ void				someone_died(t_data *data, int i);
 long long			get_time(void);
 void				print_message(t_philo *philo, char *message);
 long long			ft_atol(const char *str);
-void				set_dead(t_philo *philo, int *died);
+int				set_dead(t_philo *philo);
+
+void				philosopher_sleep(t_philo *philo);
+void				philosopher_eat(t_philo *philo);
+void				philosopher_think(t_philo *philo);
 #endif

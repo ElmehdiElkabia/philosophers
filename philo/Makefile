@@ -1,9 +1,7 @@
 CC= cc
-# CFLAGS= -Wall -Wextra -pedantic -std=c11 
-# CFLAGS= -Wall -Wextra -Werror -fsanitize=thread -g -pthread
 CFLAGS= -Wall -Wextra -Werror
 name= philo
-SRC= main.c init.c simulation.c utilis.c
+SRC= main.c init.c simulation.c utilis.c philosopher.c
 OBJ= $(SRC:.c=.o)
 
 all: $(name)

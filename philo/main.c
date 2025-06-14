@@ -55,9 +55,7 @@ int	validate_time(int argc, char **argv)
 void	print_msg(char *str)
 {
 	printf("Usage: %s number_of_philosophers ", str);
-	printf("time_to_die ");
-	printf("time_to_eat ");
-	printf("time_to_sleep ");
+	printf("time_to_die time_to_eat time_to_sleep ");
 	printf("[number_of_times_each_philosopher_must_eat]");
 }
 
