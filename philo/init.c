@@ -6,7 +6,7 @@
 /*   By: eelkabia <eelkabia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 12:41:41 by eelkabia          #+#    #+#             */
-/*   Updated: 2025/06/01 17:27:35 by eelkabia         ###   ########.fr       */
+/*   Updated: 2025/06/17 11:38:57 by eelkabia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,29 +35,6 @@ void	init_data(int argc, char **argv, t_data *data)
 		return ;
 	}
 	init_forks_and_philosophers(data);
-	// int n = data->number_of_philosophers;
-    // int t_die = data->time_to_die;
-    // int t_eat = data->time_to_eat;
-    // int t_sleep = data->time_to_sleep;
-
-    // if (n % 2 == 0)
-    // {
-    //     // Even number of philosophers
-    //     if (t_die <= t_eat + t_sleep)
-    //     {
-    //         printf("Error: For even philosophers, time_to_die must be > time_to_eat + time_to_sleep\n");
-    //         exit(1);
-    //     }
-    // }
-    // else
-    // {
-    //     // Odd number of philosophers
-    //     if (t_die <= 2 * t_eat + t_sleep)
-    //     {
-    //         printf("Error: For odd philosophers, time_to_die must be > 2 * time_to_eat + time_to_sleep\n");
-    //         exit(1);
-    //     }
-    // }
 }
 
 void	init_forks_and_philosophers(t_data *data)

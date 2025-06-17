@@ -1,4 +1,5 @@
 CC= cc
+# CFLAGS= -Wall -Wextra -Werror -fsanitize=thread
 CFLAGS= -Wall -Wextra -Werror
 name= philo
 SRC= main.c init.c simulation.c utilis.c philosopher.c

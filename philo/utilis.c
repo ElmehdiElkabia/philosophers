@@ -6,7 +6,7 @@
 /*   By: eelkabia <eelkabia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 12:45:00 by eelkabia          #+#    #+#             */
-/*   Updated: 2025/06/01 17:30:09 by eelkabia         ###   ########.fr       */
+/*   Updated: 2025/06/17 12:35:21 by eelkabia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	someone_died(t_data *data, int i)
 	pthread_mutex_lock(&data->death_check_mutex);
 	data->someone_died = 1;
 	pthread_mutex_unlock(&data->death_check_mutex);
-	pthread_mutex_unlock(&data->philo[i].meal_mutex);
 }
 
 void	print_message(t_philo *philo, char *message)
@@ -34,7 +33,7 @@ void	print_message(t_philo *philo, char *message)
 	long long	time;
 
 	if (set_dead(philo))
-		return;
+		return ;
 	pthread_mutex_lock(&philo->data->print_mutex);
 	time = get_time() - philo->data->start_time;
 	if (!set_dead(philo))
