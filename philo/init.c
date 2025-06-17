@@ -6,7 +6,7 @@
 /*   By: eelkabia <eelkabia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 12:41:41 by eelkabia          #+#    #+#             */
-/*   Updated: 2025/06/17 11:38:57 by eelkabia         ###   ########.fr       */
+/*   Updated: 2025/06/17 14:26:59 by eelkabia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 void	init_data(int argc, char **argv, t_data *data)
 {
-	data->number_of_philosophers = ft_atol(argv[1]);
-	data->time_to_die = ft_atol(argv[2]);
-	data->time_to_eat = ft_atol(argv[3]);
-	data->time_to_sleep = ft_atol(argv[4]);
+	data->number_of_philosophers = ft_arg(argv[1]);
+	data->time_to_die = ft_arg(argv[2]);
+	data->time_to_eat = ft_arg(argv[3]);
+	data->time_to_sleep = ft_arg(argv[4]);
 	if (argc == 6)
-		data->meals_required = ft_atol(argv[5]);
+		data->meals_required = ft_arg(argv[5]);
 	else
 		data->meals_required = -1;
 	data->someone_died = 0;

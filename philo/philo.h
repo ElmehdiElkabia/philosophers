@@ -6,7 +6,7 @@
 /*   By: eelkabia <eelkabia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 09:37:00 by eelkabia          #+#    #+#             */
-/*   Updated: 2025/06/01 17:27:53 by eelkabia         ###   ########.fr       */
+/*   Updated: 2025/06/17 14:27:42 by eelkabia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,18 +47,21 @@ typedef struct s_philo
 	t_data			*data;
 }					t_philo;
 
+int					validate_args(int argc, char **argv);
 void				init_data(int argc, char **argv, t_data *data);
 void				init_forks_and_philosophers(t_data *data);
 void				start_simulation(t_data *data);
 void				*philosopher_routine(void *arg);
 void				*monitor_routine(void *arg);
 void				someone_died(t_data *data, int i);
-long long			get_time(void);
-void				print_message(t_philo *philo, char *message);
-long long			ft_atol(const char *str);
 int					set_dead(t_philo *philo);
-
+int					check_philo_status(t_data *data, int i, int *full_count);
+void				print_msg(char *str);
+void				print_message(t_philo *philo, char *message);
+long long			ft_arg(const char *str);
+long long			get_time(void);
 void				philosopher_sleep(t_philo *philo);
 void				philosopher_eat(t_philo *philo);
 void				philosopher_think(t_philo *philo);
+void				ft_usleep(t_philo *philo, long duration_ms);
 #endif

@@ -6,13 +6,13 @@
 /*   By: eelkabia <eelkabia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 12:43:08 by eelkabia          #+#    #+#             */
-/*   Updated: 2025/06/17 12:14:57 by eelkabia         ###   ########.fr       */
+/*   Updated: 2025/06/17 14:36:36 by eelkabia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	handel_one_philo(t_philo *philo)
+static int	handel_one_philo(t_philo *philo)
 {
 	int	first;
 
@@ -21,7 +21,7 @@ int	handel_one_philo(t_philo *philo)
 	{
 		pthread_mutex_lock(&philo->data->forks[first]);
 		print_message(philo, "has taken a fork");
-		usleep(philo->data->time_to_die * 1000);
+		ft_usleep(philo, philo->data->time_to_die);
 		pthread_mutex_unlock(&philo->data->forks[first]);
 		return (1);
 	}
@@ -36,7 +36,7 @@ void	*philosopher_routine(void *argv)
 	if (handel_one_philo(philo))
 		return (NULL);
 	if (philo->id % 2 == 0)
-		usleep(500);
+		ft_usleep(philo, philo->data->time_to_eat / 2);
 	while (1)
 	{
 		if (set_dead(philo))
@@ -53,22 +53,6 @@ void	*philosopher_routine(void *argv)
 			break ;
 	}
 	return (NULL);
-}
-
-int	check_philo_status(t_data *data, int i, int *full_count)
-{
-	pthread_mutex_lock(&data->philo[i].meal_mutex);
-	if (data->meals_required > 0
-		&& (data->philo[i].meals_eaten >= data->meals_required))
-		(*full_count)++;
-	if (get_time() - data->philo[i].last_meal_time > data->time_to_die)
-	{
-		pthread_mutex_unlock(&data->philo[i].meal_mutex);
-		someone_died(data, i);
-		return (1);
-	}
-	pthread_mutex_unlock(&data->philo[i].meal_mutex);
-	return (0);
 }
 
 void	*monitor_routine(void *argv)

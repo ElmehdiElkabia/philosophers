@@ -1,8 +1,8 @@
 CC= cc
-# CFLAGS= -Wall -Wextra -Werror -fsanitize=thread
 CFLAGS= -Wall -Wextra -Werror
 name= philo
-SRC= main.c init.c simulation.c utilis.c philosopher.c
+SRC= init.c	main.c	message.c	parsing.c\
+philosopher.c	philo_status.c	simulation.c	utilis.c
 OBJ= $(SRC:.c=.o)
 
 all: $(name)
