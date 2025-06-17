@@ -6,7 +6,7 @@
 /*   By: eelkabia <eelkabia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 14:21:23 by eelkabia          #+#    #+#             */
-/*   Updated: 2025/06/17 14:28:19 by eelkabia         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:19:51 by eelkabia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,24 @@ static int	check_number(char *str)
 	return (0);
 }
 
+static int	validate_must_eat(char **argv)
+{
+	if (ft_arg(argv[5]) == 0)
+		return (1);
+	if (ft_arg(argv[5]) == -2147483648)
+	{
+		printf("Error: Argument 5 is out of valid int range\n");
+		return (1);
+	}
+	return (0);
+}
+
 static int	validate_time(int argc, char **argv)
 {
 	int	i;
 
 	i = 1;
-	while (i < argc)
+	while (i < argc - 1)
 	{
 		if (ft_arg(argv[i]) <= 0)
 		{
@@ -48,6 +60,11 @@ static int	validate_time(int argc, char **argv)
 			return (1);
 		}
 		i++;
+	}
+	if (argc == 6)
+	{
+		if (validate_must_eat(argv))
+			return (1);
 	}
 	return (0);
 }
